@@ -1,0 +1,55 @@
+body {
+  font-family: 'Inter', sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* For hero section with background image */
+#home {
+  background-image: url('https://v3apparel.com/cdn/shop/articles/Get_Fit_in_Just_10_Minutes_-_Full-Body_Workout_for_Busy_Women_-_V3_Apparel_seamless_workout_leggings_gym_tights_fitness_sports_bras_tank_tops_and_t_shirts.jpg?v=1679523333&width=2048');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* For animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-in;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Additional utility classes */
+.section-padding {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+.transition-all {
+  transition: all 0.3s ease;
+}
