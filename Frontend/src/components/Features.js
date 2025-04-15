@@ -1,6 +1,7 @@
 import React from 'react';
+import { FaDumbbell, FaHeartbeat, FaUserFriends, FaCalendarCheck } from 'react-icons/fa';
 
-function Features({ features }) {
+function Features({ features = defaultFeatures }) {
   return (
     <section id="workouts" className="py-20 bg-gray-100">
       <div className="container mx-auto px-6">
@@ -12,28 +13,47 @@ function Features({ features }) {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {features.length > 0 ? (
-            features.map(feature => (
-              <div 
-                key={feature.id} 
-                className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition duration-300 transform hover:-translate-y-2"
-              >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
-              </div>
-            ))
-          ) : (
-            <div className="col-span-4 text-center py-12">
-              <div className="animate-pulse flex justify-center">
-                <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-              </div>
+          {features.map(feature => (
+            <div 
+              key={feature.id} 
+              className="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition duration-300 transform hover:-translate-y-2"
+            >
+              <div className="text-4xl mb-4 text-purple-600">{feature.icon}</div>
+              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+              <p className="text-gray-600">{feature.description}</p>
             </div>
-          )}
+          ))}
         </div>
       </div>
     </section>
   );
 }
+
+const defaultFeatures = [
+  {
+    id: 1,
+    icon: <FaDumbbell />,
+    title: 'Custom Workouts',
+    description: 'Access personalized workout plans tailored to your fitness goals and experience level.'
+  },
+  {
+    id: 2,
+    icon: <FaHeartbeat />,
+    title: 'Health Tracking',
+    description: 'Monitor your progress with comprehensive health and fitness tracking tools.'
+  },
+  {
+    id: 3,
+    icon: <FaUserFriends />,
+    title: 'Expert Guidance',
+    description: 'Get support from certified trainers and connect with a community of fitness enthusiasts.'
+  },
+  {
+    id: 4,
+    icon: <FaCalendarCheck />,
+    title: 'Flexible Planning',
+    description: 'Create and manage your workout schedule with our easy-to-use planning tools.'
+  }
+];
 
 export default Features;

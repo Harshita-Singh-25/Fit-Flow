@@ -4,12 +4,11 @@ import Header from '../Header';
 import Features from '../components/Features';
 import Footer from '../components/Footer';
 
-const HomePage = () => {
+const HomePage = ({ features, schedules, trainers, plans, testimonials }) => {
   return (
     <>
-      <Header />
       <Hero />
-      <Features />
+      <Features features={features} />
       <Footer />
     </>
   );
