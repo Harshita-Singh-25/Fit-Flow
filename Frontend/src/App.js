@@ -1,6 +1,7 @@
 // src/App.js
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './Header';
 import Hero from './components/Hero';
 import Features from './components/Features';
@@ -10,6 +11,7 @@ import Pricing from './components/Pricing';
 import Testimonials from './components/Testimonials';
 import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
+import HomePage from './pages/HomePage';
 import './App.css';
 
 function App() {
@@ -37,14 +39,7 @@ function App() {
         { id: 5, day: 'Tuesday', time: '5:30 PM', class: 'Cardio Rush', type: 'HIIT', instructor: 'Mike' },
         { id: 6, day: 'Wednesday', time: '7:00 AM', class: 'Morning Yoga', type: 'Yoga', instructor: 'Sarah' },
         { id: 7, day: 'Wednesday', time: '12:00 PM', class: 'Lunchtime Meditation', type: 'Meditation', instructor: 'Lisa' },
-        { id: 8, day: 'Thursday', time: '6:00 AM', class: 'HIIT Express', type: 'HIIT', instructor: 'Mike' },
-        { id: 9, day: 'Thursday', time: '7:30 PM', class: 'Restorative Yoga', type: 'Yoga', instructor: 'John' },
-        { id: 10, day: 'Friday', time: '8:00 AM', class: 'Full Body HIIT', type: 'HIIT', instructor: 'Mike' },
-        { id: 11, day: 'Friday', time: '5:00 PM', class: 'Weekend Wind-Down', type: 'Meditation', instructor: 'Lisa' },
-        { id: 12, day: 'Saturday', time: '9:00 AM', class: 'Weekend Warrior', type: 'HIIT', instructor: 'Mike' },
-        { id: 13, day: 'Saturday', time: '11:00 AM', class: 'Flow Yoga', type: 'Yoga', instructor: 'Sarah' },
-        { id: 14, day: 'Sunday', time: '10:00 AM', class: 'Sunday Stretch', type: 'Yoga', instructor: 'John' },
-        { id: 15, day: 'Sunday', time: '5:00 PM', class: 'Mindful Meditation', type: 'Meditation', instructor: 'Lisa' }
+        
       ]);
       
       setTrainers([
@@ -146,33 +141,46 @@ function App() {
     }, 500);
   }, []);
 
+  // return (
+  //   <div className="App">
+  //     <Header />
+  //     <Hero />
+  //     <Features features={features} />
+  //     <ClassSchedule schedules={schedules} />
+  //     <Trainers trainers={trainers} />
+  //     <Pricing plans={plans} />
+  //     <Testimonials testimonials={testimonials} />
+  //     <ContactForm />
+  //     <Footer />
+  //   </div>
+  // );
+
   return (
-    <div className="App">
-      <Header />
-      <Hero />
-      <Features features={features} />
-      <ClassSchedule schedules={schedules} />
-      <Trainers trainers={trainers} />
-      <Pricing plans={plans} />
-      <Testimonials testimonials={testimonials} />
-      <ContactForm />
-      <Footer />
-    </div>
+    <Router>
+      <div className="App">
+        <Header />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomePage
+                features={features}
+                schedules={schedules}
+                trainers={trainers}
+                plans={plans}
+                testimonials={testimonials}
+              />
+            }
+          />
+          {/* You can add more routes like this later */}
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
+
 }
 
 export default App;
 
-// src/components/Header.js
-// src/components/Hero.js
-// src/components/Features.js
-// src/components/ClassSchedule.js
-// src/components/Trainers.js
 
-
-// src/components/Pricing.js
-
-
-// src/components/Testimonials.js
-
-// src/components/ContactForm.js
