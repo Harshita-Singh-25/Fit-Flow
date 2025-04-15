@@ -5,6 +5,7 @@ function HealthPlanner() {
   const [plans, setPlans] = useState({ diet: [], workout: [] });
   const [newPlan, setNewPlan] = useState({ type: 'diet', title: '', description: '' });
   const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState({ text: '', type: '' });
 
   useEffect(() => {
     fetchPlans();
@@ -12,11 +13,13 @@ function HealthPlanner() {
 
   const fetchPlans = async () => {
     try {
-      const response = await axios.get('/api/health-plans');
+      setLoading(true);
+      const response = await axios.get('http://localhost:5000/api/health-plans');
       setPlans(response.data);
-      setLoading(false);
     } catch (error) {
       console.error('Error fetching plans:', error);
+      setMessage({ text: 'Failed to load plans. Please try again.', type: 'error' });
+    } finally {
       setLoading(false);
     }
   };
@@ -24,21 +27,48 @@ function HealthPlanner() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/health-plans', newPlan);
+      const response = await axios.post('http://localhost:5000/api/health-plans', newPlan);
+      
       setPlans(prev => ({
         ...prev,
         [newPlan.type]: [...prev[newPlan.type], response.data]
       }));
+      
       setNewPlan({ type: 'diet', title: '', description: '' });
+      setMessage({ text: 'Plan added successfully!', type: 'success' });
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setMessage({ text: '', type: '' });
+      }, 3000);
     } catch (error) {
       console.error('Error adding plan:', error);
+      setMessage({ text: 'Failed to add plan. Please try again.', type: 'error' });
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 pt-20 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="animate-pulse">Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 pt-20 px-4">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-800 mb-8">Health Planner</h1>
+        
+        {message.text && (
+          <div className={`mb-4 p-4 rounded ${
+            message.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+          }`}>
+            {message.text}
+          </div>
+        )}
         
         {/* Add New Plan Form */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
@@ -92,9 +122,7 @@ function HealthPlanner() {
           {/* Diet Plans */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold mb-4">Diet Plans</h2>
-            {loading ? (
-              <p>Loading...</p>
-            ) : plans.diet.length === 0 ? (
+            {plans.diet.length === 0 ? (
               <p className="text-gray-500">No diet plans added yet.</p>
             ) : (
               <div className="space-y-4">
@@ -111,9 +139,7 @@ function HealthPlanner() {
           {/* Workout Plans */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold mb-4">Workout Plans</h2>
-            {loading ? (
-              <p>Loading...</p>
-            ) : plans.workout.length === 0 ? (
+            {plans.workout.length === 0 ? (
               <p className="text-gray-500">No workout plans added yet.</p>
             ) : (
               <div className="space-y-4">

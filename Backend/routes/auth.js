@@ -1,70 +1,88 @@
 // routes/auth.js
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
-// Register Route
-router.post('/register', async (req, res) => {
-  const { username, email, password } = req.body;
+// Test route
+router.get('/test', (req, res) => {
+  res.json({ message: 'Auth route is working!' });
+});
 
-  if (!username || !email || !password) {
-    return res.status(400).json({ message: 'All fields are required' });
-  }
-
+// Signup Route
+router.post('/signup', async (req, res) => {
   try {
+    console.log('Received signup request:', req.body); // Debug log
+
+    const { username, email, password } = req.body;
+
+    // Validate input
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: 'Please provide all required fields' });
+    }
+
     // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(409).json({ message: 'User already exists' });
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ message: 'User already exists' });
     }
 
     // Create new user
-    const user = new User({ username, email, password });
+    user = new User({
+      username,
+      email,
+      password
+    });
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+
+    // Save user to database
     await user.save();
+    console.log('User saved successfully'); // Debug log
 
     res.status(201).json({ 
-      message: 'User registered successfully',
-      user: { id: user._id, username: user.username, email: user.email }
+      message: 'User created successfully',
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email
+      }
     });
   } catch (err) {
-    console.error('Registration error:', err);
-    res.status(500).json({ message: 'Server error during registration' });
+    console.error('Signup error:', err);
+    res.status(500).json({ message: 'Server error during signup' });
   }
 });
 
 // Login Route
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required' });
-  }
-
   try {
-    // Find user by email
+    const { email, password } = req.body;
+
+    // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Check password
-    const isMatch = await user.comparePassword(password);
+    // Validate password
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Return user data (excluding password)
-    res.status(200).json({ 
-      message: 'Login successful', 
-      user: { 
+    res.json({
+      user: {
         id: user._id,
-        username: user.username, 
-        email: user.email 
-      } 
+        username: user.username,
+        email: user.email
+      }
     });
   } catch (err) {
     console.error('Login error:', err);
-    res.status(500).json({ message: 'Server error during login' });
+    res.status(500).json({ message: 'Server error' });
   }
 });
 

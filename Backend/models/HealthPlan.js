@@ -1,11 +1,6 @@
 const mongoose = require('mongoose');
 
 const HealthPlanSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
-    required: true
-  },
   type: {
     type: String,
     required: true,
